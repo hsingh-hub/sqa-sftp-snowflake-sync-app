@@ -43,12 +43,12 @@ output application/json
 			</snowflake:execute-script>
 				<logger level="INFO" doc:name="Log Uploaded File" doc:id="8ef60d26-e23f-426b-a55d-315e968d24bc" message='#[vars.fileName ++ ": File Uploaded to Snowflake"]' />
 				<file:delete doc:name="Delete from temp directory" doc:id="9d1e28de-438f-4800-91d7-ff628b9be52c" config-ref="File_Config" path="#[vars.snowflakeTempFile]" />
-				<sftp:move doc:name="Archive File" doc:id="6864c13c-8c9a-4fdc-8029-9a3a5f861990" config-ref="fidelity_SFTP_Config" sourcePath='#["/Shared/FidelitySFTP/Transmissions/Inbound/" ++ vars.fileName]' targetPath='#["/Shared/FidelitySFTP/Transmissions/Archive/"]' createParentDirectories="false" renameTo='#[now() as String {format: "yyyyMMddHHmmss_"} ++ vars.fileName]'/>
+				<sftp:move doc:name="Archive File" doc:id="6864c13c-8c9a-4fdc-8029-9a3a5f861990" config-ref="fidelity_SFTP_Config" sourcePath='#["/Shared/FidelitySFTP/Transmissions/Inbound/" ++ vars.fileName]' targetPath='#["/Shared/FidelitySFTP/Transmissions/Archive/"]' createParentDirectories="false" renameTo='#[now() as String {format: "yyyyMMddHHmmss_"} ++ correlationId ++ "_" ++ vars.fileName]'/>
 				<logger level="INFO" doc:name="Log Archive File" doc:id="5acc9206-31cf-4849-8827-4fee0c5a057b" message='#[vars.fileName ++ ": File Moved to Archive Folder"]' />
 				<error-handler>
 					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="1a837ccd-01be-4b50-917f-1145ee1162c1" type="ANY">
 						<logger level="ERROR" doc:name="Error Log" doc:id="b8fc0042-8dd1-4f4b-ae27-aad68e8e4f61" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"message": "Error Occured while syncing file from SFTP to Snowflake",&#10;	"errorType": error.errorType.namespace ++ ":" ++ error.errorType.identifier,&#10;	"errorDescription": error.description,&#10;	"correlationId": correlationId,&#10;	"fileName": vars.fileName&#10;}]' />
-						<sftp:move doc:name="Move to Error Folder" doc:id="e19183a0-2410-49af-a3f4-7b9c648a0633" config-ref="fidelity_SFTP_Config" sourcePath='#["/Shared/FidelitySFTP/Transmissions/Inbound/" ++ vars.fileName]' targetPath='#["/Shared/FidelitySFTP/Transmissions/Error/"]' createParentDirectories="false" renameTo='#[now() as String {format: "yyyyMMddHHmmss_"} ++ vars.fileName]'/>
+						<sftp:move doc:name="Move to Error Folder" doc:id="e19183a0-2410-49af-a3f4-7b9c648a0633" config-ref="fidelity_SFTP_Config" sourcePath='#["/Shared/FidelitySFTP/Transmissions/Inbound/" ++ vars.fileName]' targetPath='#["/Shared/FidelitySFTP/Transmissions/Error/"]' createParentDirectories="false" renameTo='#[(now() as String {format: "yyyyMMddHHmmss_"}) ++ correlationId ++ "_" ++ vars.fileName]'/>
 							<logger level="ERROR" doc:name="Log File Moved to Archive" doc:id="cecaedc6-8b48-4513-978e-2cf1f62ee9ea" message='#[vars.fileName ++ ": File Moved to Error Folder"]'/>
 					</on-error-continue>
 				</error-handler>
