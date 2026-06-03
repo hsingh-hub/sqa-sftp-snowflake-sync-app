@@ -1,0 +1,6 @@
+api:
+  name: "sqa-sftp-snowflake-sync-app"
+  version: "v1.0.0"
+
+file:
+  maxconcurrency: "5"

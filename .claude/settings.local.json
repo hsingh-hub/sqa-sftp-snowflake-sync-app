@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Lenovo\\\\AnypointStudio\\\\studio-workspace\\\\sqa-sftp-snowflake-sync-app\" -Recurse -Force)",
+      "Bash(Select-Object FullName, Length, LastWriteTime)",
+      "Bash(Sort-Object FullName)"
+    ]
+  }
+}

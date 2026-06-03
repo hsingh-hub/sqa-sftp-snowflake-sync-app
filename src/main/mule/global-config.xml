@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:snowflake="http://www.mulesoft.org/schema/mule/snowflake" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/snowflake http://www.mulesoft.org/schema/mule/snowflake/current/mule-snowflake.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="b58ffc64-9497-4447-93f4-fad45817082b" doc:description="env-specific yaml" file="config/config-${mule.env}.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="24cd917b-5879-40a0-8196-8a066813538d" file="config/secure-config-${mule.env}.yaml" key="${mule.encryptionKey}"/>
+	<configuration-properties doc:name="Configuration properties" doc:id="86bce0a6-caa9-48b6-9d2e-383ac0dc1eb8" doc:description="common.yaml" file="config/common.yaml" />
+	<snowflake:snowflake-config name="Snowflake_Config" doc:name="Snowflake Config" doc:id="47ddc83a-f0c8-40c0-a148-829491fce6b5" >
+		<snowflake:keypair-connection accountName="#[p('snowflake.accountName')]" warehouse="#[p('snowflake.warehouse')]" database="#[p('snowflake.database')]" schema="#[p('snowflake.schema')]" user="${secure::snowflake.user}" privateKeyFile="${app.home}/rsa_key.p8" privateKeyPassword="${secure::snowflake.privateKeyPassword}" role="#[p('snowflake.role')]"/>
+	</snowflake:snowflake-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="38b774d8-3161-4c64-bb2d-d04f8f137274" >
+		<file:connection workingDir="${app.home}" />
+	</file:config>
+	<global-property doc:name="Global Property" doc:id="a5c52af7-003b-4709-b4d6-5e1fcd48ea54" name="mule.env" value="sandbox" />
+	<sftp:config name="fidelity_SFTP_Config" doc:name="SFTP Config" doc:id="ff2fb6e3-1a7b-44d5-be7f-79dd54ff4052" >
+		<sftp:connection host="#[p('fidelity.host')]" username="${secure::fidelity.username}" password="${secure::fidelity.password}" port="#[p('fidelity.port')]" knownHostsFile="known_hosts">
+			<reconnection >
+				<reconnect />
+			</reconnection>
+			<pooling-profile maxActive="${fidelity.pooling.maxactive}" maxIdle="${fidelity.pooling.maxidle}" maxWait="${fidelity.pooling.maxwait}" minEvictionMillis="${fidelity.pooling.mineviction}" evictionCheckIntervalMillis="${fidelity.pooling.evictioncheckinterval}" />
+		</sftp:connection>
+	</sftp:config>
+</mule>

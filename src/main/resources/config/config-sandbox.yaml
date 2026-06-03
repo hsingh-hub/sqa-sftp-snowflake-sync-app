@@ -1,0 +1,26 @@
+#Schedule to run daily at 2:00 AM
+scheduler:
+  cron:
+    expression: "0 0 2 * * ?"
+    timezone: "America/New_York"
+
+#fidelity SFTP
+fidelity :
+  host : "ftp-simonquickadvisors.egnyte.com"
+  port : "22"
+  directory : 
+    path : "/Shared/FidelitySFTP/Transmissions/Inbound"
+  pooling:
+    maxactive: "1"   
+    maxidle: "5"
+    maxwait: "5"
+    mineviction: "300000"
+    evictioncheckinterval: "60000"
+
+#Snowflake
+snowflake:
+  accountName : "a9744066269671-simon_quick_advisors"
+  warehouse: "MULESOFT_WH"
+  database: "DEV_SIMONQUICK"
+  schema: "UTILITY"
+  role: "SYSADMIN"

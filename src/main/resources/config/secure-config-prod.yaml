@@ -1,0 +1,9 @@
+#fidelity SFTP
+fidelity :
+  username : "![]"
+  password : "![]"
+
+#Snowflake
+snowflake :
+  user: "![]"
+  privateKeyPassword: "![]"

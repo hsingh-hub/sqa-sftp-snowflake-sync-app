@@ -1,0 +1,9 @@
+#fidelity SFTP
+fidelity :
+  username : "![WOvSz5NdR+oeobiF1LfR2W8iExyq2ghWuYsAV8SzSRg=]"
+  password : "![7JKfP18gegUEv35v6A4QaKzjN4wtCz6Z+2y+dDKcYMXTzao+VPZLem/qwooG1eO2]"
+  
+#Snowflake
+snowflake:
+  user: "![KS6AVONDLaTCnenQBCIJC+afmzEgbzlS+iTq6Aqg4vE=]"
+  privateKeyPassword: "![wnmo+UFBiLR7VJitlqqEQg==]"
